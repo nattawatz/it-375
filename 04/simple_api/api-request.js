@@ -46,27 +46,22 @@ app.get('/api/getstuid/:id',(req,res)=>{
             }
             });
 
-app.get('/api/addstu',(req,res)=>
-{
-// get data from request body
-    const stuId= req.body.id;
-    const stuFname= req.body.fname;
-    const stuLname= req.body.lname;
-    const stuTel= req.body.tel;
-    
-    const newStudent={
-        id: stuId,
-        'fname': stuFname,
+app.post('/api/addstu',(req,res)=>{
+      // get data from request body
+      const stuId= req.body.id;
+      const stuFname= req.body.fname;
+      const stuLname= req.body.lname;const stuTel= req.body.tel;
+      const newStudent={
+    id: stuId,'fname': stuFname,
         'lname': stuLname,
         'tel': stuTel
-};
-
-    itStudents.push(newStudent);
+   };
+       itStudents.push(newStudent);
     res.send(itStudents);
 
 });
 
-app.get('/api/addstudents',(req,res)=>{
+app.post('/api/addstudents',(req,res)=>{
     // get data from request body
     const stuArr = req.body;
     stuArr.forEach(element => {
@@ -82,18 +77,29 @@ app.get('/api/addstudents',(req,res)=>{
     'tel': stuTel
     };
     itStudents.push(newStudent);
-    });
+  });
     res.send(itStudents);
-    });
+});
 
-    app.put('/api/editstu:/id',(req,res)=>{
+app.put('/api/editstu:/id',(req,res)=>{
         const stuId = itStudents.find(element => element.id === parseInt(req.body.id));
         if(stuId){
         stuId.fname = req.body.fname;
         stuId.lname = req.body.lname;
         stuId.tel = req.body.tel;
+    }else{
+      res.status(404).send('ไม่พบรหัสนักศึกษานี้');
+    }
+    res.send(itStudents);
+ });
+
+app.delete('/api/deletestu/:id',(req,res)=>{
+            const stuId = itStudents.find(element => element.id === parseInt(req.params.id));
+            if(stuId){
+            const index = itStudents.indexOf(stuId);
+            itStudents.splice(index,1);
         }else{
-        res.status(404).send('ไม่พบรหัสนักศึกษานี้');
-        }
-        res.send(itStudents);
-        });
+       res.status(404).send('ไม่พบรหัสนักศึกษานี้');       
+     }
+   res.send(itStudents);
+});
